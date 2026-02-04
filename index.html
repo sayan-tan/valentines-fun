@@ -11,13 +11,25 @@
         <!-- Confetti library -->
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap"
+            rel="stylesheet"
+        />
         <style>
             :root {
-                --bg1: #ffd6e7;
-                --bg2: #ffeef6;
-                --card: #ffffffcc;
-                --yes: #ff3b7a;
-                --yesHover: #ff1f68;
+                --bg1: #2d1b2e;
+                --bg2: #1a0f1c;
+                --bg3: #4a2c4d;
+                --card: rgba(255, 248, 252, 0.92);
+                --card-border: rgba(255, 182, 193, 0.4);
+                --yes: #c44569;
+                --yesHover: #a83a56;
+                --yesGlow: rgba(196, 69, 105, 0.5);
+                --text: #3d2a3f;
+                --textSoft: #6b4d6e;
+                --gold: #d4a574;
             }
 
             * {
@@ -29,17 +41,33 @@
                 min-height: 100svh;
                 display: grid;
                 place-items: center;
-                background: radial-gradient(
-                    circle at top,
-                    var(--bg2),
-                    var(--bg1)
-                );
-                font-family: system-ui, sans-serif;
+                background:
+                    radial-gradient(
+                        ellipse 120% 80% at 50% 0%,
+                        var(--bg3) 0%,
+                        transparent 50%
+                    ),
+                    radial-gradient(
+                        circle at 80% 90%,
+                        rgba(196, 69, 105, 0.15) 0%,
+                        transparent 40%
+                    ),
+                    radial-gradient(
+                        circle at 20% 80%,
+                        rgba(212, 165, 116, 0.12) 0%,
+                        transparent 35%
+                    ),
+                    linear-gradient(
+                        180deg,
+                        var(--bg2) 0%,
+                        var(--bg1) 50%,
+                        var(--bg2) 100%
+                    );
+                font-family: "Cormorant Garamond", Georgia, serif;
                 overflow: hidden;
                 padding: 16px;
             }
 
-            /* FULL-SCREEN CONFETTI CANVAS */
             #confettiCanvas {
                 position: fixed;
                 inset: 0;
@@ -50,25 +78,63 @@
             }
 
             .card {
+                position: relative;
+                z-index: 1;
                 width: min(720px, 92vw);
-                padding: 26px 22px;
+                padding: 36px 28px;
                 background: var(--card);
-                backdrop-filter: blur(10px);
-                border-radius: 22px;
+                -webkit-backdrop-filter: blur(16px);
+                backdrop-filter: blur(16px);
+                border-radius: 24px;
                 text-align: center;
-                box-shadow: 0 18px 60px rgba(0, 0, 0, 0.15);
+                box-shadow:
+                    0 0 0 1px var(--card-border),
+                    0 25px 80px rgba(45, 27, 46, 0.35),
+                    0 0 60px rgba(196, 69, 105, 0.08);
+                animation: cardGlow 4s ease-in-out infinite alternate;
+            }
+
+            @keyframes cardGlow {
+                from {
+                    box-shadow:
+                        0 0 0 1px var(--card-border),
+                        0 25px 80px rgba(45, 27, 46, 0.35),
+                        0 0 60px rgba(196, 69, 105, 0.08);
+                }
+                to {
+                    box-shadow:
+                        0 0 0 1px var(--card-border),
+                        0 25px 80px rgba(45, 27, 46, 0.4),
+                        0 0 80px rgba(196, 69, 105, 0.12);
+                }
             }
 
             .art {
                 width: min(260px, 80vw);
                 margin: 0 auto 10px;
                 display: block;
-                filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.12));
+                filter: drop-shadow(0 12px 20px rgba(61, 42, 63, 0.2));
+                animation: float 3s ease-in-out infinite;
+            }
+
+            @keyframes float {
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+                50% {
+                    transform: translateY(-6px);
+                }
             }
 
             h1 {
-                font-size: clamp(26px, 4vw, 44px);
-                margin: 12px 0 18px;
+                font-family: "Great Vibes", cursive;
+                font-size: clamp(32px, 5vw, 52px);
+                font-weight: 400;
+                margin: 16px 0 24px;
+                color: var(--text);
+                letter-spacing: 0.02em;
+                text-shadow: 0 2px 20px rgba(196, 69, 105, 0.15);
             }
 
             .button-zone {
@@ -83,61 +149,83 @@
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
-                padding: 16px 24px;
-                font-size: 18px;
-                font-weight: 800;
+                padding: 18px 32px;
+                font-size: 20px;
+                font-family: "Cormorant Garamond", Georgia, serif;
+                font-weight: 600;
+                letter-spacing: 0.08em;
                 border-radius: 999px;
                 border: none;
                 cursor: pointer;
-                box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+                -webkit-user-select: none;
                 user-select: none;
                 -webkit-tap-highlight-color: transparent;
                 transition:
                     transform 0.12s ease,
-                    background 0.12s ease;
+                    background 0.2s ease,
+                    box-shadow 0.2s ease;
             }
 
             #yesBtn {
                 left: 18%;
                 background: var(--yes);
                 color: #fff;
+                box-shadow:
+                    0 8px 24px rgba(196, 69, 105, 0.35),
+                    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
             }
             #yesBtn:hover {
                 background: var(--yesHover);
+                box-shadow:
+                    0 12px 32px var(--yesGlow),
+                    0 0 0 1px rgba(255, 255, 255, 0.25) inset;
             }
 
             #noBtn {
                 left: 62%;
-                background: #e5e7eb;
-                color: #111827;
+                background: rgba(212, 165, 116, 0.25);
+                color: var(--textSoft);
+                border: 1px solid rgba(212, 165, 116, 0.4);
+                box-shadow: 0 6px 16px rgba(61, 42, 63, 0.1);
+            }
+            #noBtn:hover {
+                background: rgba(212, 165, 116, 0.35);
             }
 
             .hint {
-                margin-top: 10px;
-                font-size: 13px;
-                opacity: 0.7;
+                margin-top: 14px;
+                font-size: 15px;
+                font-style: italic;
+                color: var(--textSoft);
+                opacity: 0.85;
             }
 
             .result {
                 display: none;
-                margin-top: 18px;
-                animation: pop 0.35s ease;
+                margin-top: 24px;
+                animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
             .result h2 {
-                font-size: clamp(30px, 4.5vw, 46px);
-                margin: 10px 0;
+                font-family: "Great Vibes", cursive;
+                font-size: clamp(36px, 5vw, 56px);
+                font-weight: 400;
+                margin: 12px 0 20px;
+                color: var(--yes);
+                letter-spacing: 0.05em;
             }
 
             .fireworks {
                 width: min(380px, 90vw);
                 margin: 0 auto;
                 display: block;
+                border-radius: 12px;
+                box-shadow: 0 12px 40px rgba(196, 69, 105, 0.2);
             }
 
             @keyframes pop {
                 from {
-                    transform: scale(0.96);
+                    transform: scale(0.8);
                     opacity: 0;
                 }
                 to {
@@ -160,12 +248,12 @@
             >
                 <defs>
                     <linearGradient id="fur" x1="0" x2="1">
-                        <stop offset="0" stop-color="#f7c7a1" />
-                        <stop offset="1" stop-color="#f2a97b" />
+                        <stop offset="0" stop-color="#f5d5c8" />
+                        <stop offset="1" stop-color="#e8b8a8" />
                     </linearGradient>
                     <linearGradient id="heart" x1="0" x2="1">
-                        <stop offset="0" stop-color="#ff4d7d" />
-                        <stop offset="1" stop-color="#ff1f68" />
+                        <stop offset="0" stop-color="#e85a7a" />
+                        <stop offset="1" stop-color="#c44569" />
                     </linearGradient>
                 </defs>
 
@@ -185,8 +273,8 @@
                     fill="url(#fur)"
                 />
 
-                <path d="M110 92 L95 55 L140 78 Z" fill="#f2a97b" />
-                <path d="M270 92 L285 55 L240 78 Z" fill="#f2a97b" />
+                <path d="M110 92 L95 55 L140 78 Z" fill="#e8b8a8" />
+                <path d="M270 92 L285 55 L240 78 Z" fill="#e8b8a8" />
 
                 <circle cx="160" cy="130" r="8" />
                 <circle cx="220" cy="130" r="8" />
@@ -196,7 +284,7 @@
                C182 160 190 164 190 170
                C190 164 198 160 198 152
                C198 148 194 144 190 144Z"
-                    fill="#ff7aa2"
+                    fill="#c44569"
                 />
             </svg>
 
@@ -249,6 +337,15 @@
                 useWorker: true,
             });
 
+            const romanticColors = [
+                "#c44569",
+                "#e85a7a",
+                "#ffb6c1",
+                "#d4a574",
+                "#f5d5c8",
+                "#e8b8a8",
+            ];
+
             function fullScreenConfetti() {
                 const end = Date.now() + 1600;
 
@@ -258,6 +355,7 @@
                         spread: 90,
                         startVelocity: 45,
                         ticks: 180,
+                        colors: romanticColors,
                         origin: { x: Math.random(), y: Math.random() * 0.3 },
                     });
                     if (Date.now() < end) requestAnimationFrame(frame);
@@ -269,6 +367,7 @@
                         spread: 140,
                         startVelocity: 60,
                         ticks: 220,
+                        colors: romanticColors,
                         origin: { x: 0.5, y: 0.55 },
                     });
                 }, 300);
